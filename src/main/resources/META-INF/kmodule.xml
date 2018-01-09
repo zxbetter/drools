@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kmodule xmlns="http://www.drools.org/xsd/kmodule">
+    <!-- 1. kmodule 中可以包含一个到多个 kbase, 分别对应 drl 的规则文件 -->
+    <!-- 2. kbase 需要一个唯一的 name -->
+    <!-- 3. packages 指定 drl 文件的路径, 多个可以使用逗号隔开, 默认会扫描 resources 目录下所有规则文件(含子目录) -->
+    <!-- 4. packages 与 drl 文件的 package 含义不同 -->
+    <!-- 5. 指定 default 属性可以标识当前 kbase 为默认的, 这样不用名称就能查到该 kbase, 每个 kmodule 只能有一个默认的 kbase -->
+    <kbase name="rules" packages="rules">
+        <!-- kbase 下可以有多个 ksession, name 必须且唯一 -->
+        <ksession name="ksession-rule"/>
+    </kbase>
+</kmodule>
