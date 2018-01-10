@@ -1,4 +1,4 @@
-package com.devin.data;
+package devin.drools.data;
 
 import java.math.BigDecimal;
 
@@ -7,14 +7,14 @@ import java.math.BigDecimal;
  * @author devin
  */
 public class Coupon {
-    /** 标识优惠券作用于订单层 */
-    public static final String ORDER = "ORDER";
-
-    /** 标识优惠券作用于商品层 */
-    public static final String PRODUCT = "PRODUCT";
-
     /** 优惠券 id */
     private Long id;
+
+    /** 优惠券的编码 */
+    private String code;
+
+    /** 优惠券的名称 */
+    private String name;
 
     /**
      * 作用的类型
@@ -31,6 +31,22 @@ public class Coupon {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getType() {
@@ -52,9 +68,11 @@ public class Coupon {
     @Override
     public String toString() {
         return "Coupon{" +
-        "id=" + id +
-        ", type='" + type + '\'' +
-        ", discountAmout=" + discountAmout +
-        '}';
+                "id=" + id +
+                ", code='" + code + '\'' +
+                ", name='" + name + '\'' +
+                ", type='" + type + '\'' +
+                ", discountAmout=" + discountAmout +
+                '}';
     }
 }

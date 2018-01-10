@@ -1,47 +1,18 @@
-package rules
-import com.devin.data.Order
-import com.devin.data.OrderLine
-import com.devin.data.Coupon
-import java.util.List
-import java.util.Arrays
-import java.util.ArrayList
-import java.math.BigDecimal
+package devin.drools.rules
+import devin.drools.data.Order;
+import devin.drools.data.OrderLine;
+import devin.drools.data.Coupon;
+import devin.drools.util.Constants;
+import devin.drools.service.CouponService;
+import java.math.BigDecimal;
 
-global com.devin.service.impl.CommServiceImpl commService;
-
-rule "order coupon" no-loop true lock-on-active true
+rule "order coupon"
+    no-loop true
+    lock-on-active true
     when
-        $order: Order(code == "ABC");
-        Order(headerId == 1)
-        $coupon: Coupon(type == Coupon.ORDER) from $order.coupons
+        $order: Order(channel == Constants.ORDER_CHANNEL_SHOP);
     then
-        System.out.println("订单头开始优惠 " + $order.getCode());
-        System.out.println("优惠前的金额为  " + $order.getActualAmount());
-        $order.setActualAmount($order.getAmount().subtract($coupon.getDiscountAmout()));
-        System.out.println("优惠后的金额为  " + $order.getActualAmount());
-        System.out.println("订单头结束优惠 " + $order.getCode());
-end
-
-rule "line coupon" no-loop true lock-on-active true
-    when
-        $order: Order();
-
-        $couponCode: String() from (commService.getCoupons("adc", $order));
-        $coupon: Coupon(type not memberOf [Coupon.ORDER]) from $order.coupons
-    then
-        System.out.println($couponCode);
-        System.out.println($couponCode);
-        System.out.println("订单行开始优惠 " + $order.getCode());
-        System.out.println("优惠前的金额为 " + $order.getActualAmount());
-        List<OrderLine> lines = $order.getLines();
-        if (lines != null && lines.size() > 0) {
-            BigDecimal totalDiscount = BigDecimal.ZERO;
-            for (OrderLine orderLine : lines){
-                orderLine.setActualAmount(orderLine.getAmount().subtract($coupon.getDiscountAmout()));
-                totalDiscount = totalDiscount.add($coupon.getDiscountAmout());
-            }
-            $order.setActualAmount($order.getActualAmount().subtract(totalDiscount));
-        }
-        System.out.println("优惠后的金额为 " + $order.getActualAmount());
-        System.out.println("订单行结束优惠 " + $order.getCode());
+        CouponService.addCoupon($order, 1L, "OR0001", "渠道-实体店-OR0001",
+            Constants.COUPON_APPLY_ON_ORDER,
+            new BigDecimal(10).setScale(Constants.PRICE_PRECISION, BigDecimal.ROUND_HALF_UP));
 end

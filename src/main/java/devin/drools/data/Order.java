@@ -1,24 +1,24 @@
-package com.devin.data;
+package devin.drools.data;
 
 import java.math.BigDecimal;
 import java.util.List;
 
 /**
- * 订单
+ * 订单头
  * @author devin
  */
 public class Order {
-    /** 订单头 ID */
-    private Long headerId;
+    /** 订单 ID */
+    private Long id;
 
-    /** 订单 code */
+    /** 订单编码 */
     private String code;
 
-    /** 订单金额，行金额的汇总 */
-    private BigDecimal amount;
+    /** 订单的渠道 */
+    private String channel;
 
-    /** 实际金额 */
-    private BigDecimal actualAmount;
+    /** 订单金额 */
+    private BigDecimal amount;
 
     /** 优惠的金额 */
     private BigDecimal discountAmount;
@@ -29,12 +29,12 @@ public class Order {
     /** 订单用的优惠券 */
     private List<Coupon> coupons;
 
-    public Long getHeaderId() {
-        return headerId;
+    public Long getId() {
+        return id;
     }
 
-    public void setHeaderId(Long headerId) {
-        this.headerId = headerId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getCode() {
@@ -45,20 +45,20 @@ public class Order {
         this.code = code;
     }
 
+    public String getChannel() {
+        return channel;
+    }
+
+    public void setChannel(String channel) {
+        this.channel = channel;
+    }
+
     public BigDecimal getAmount() {
         return amount;
     }
 
     public void setAmount(BigDecimal amount) {
         this.amount = amount;
-    }
-
-    public BigDecimal getActualAmount() {
-        return actualAmount;
-    }
-
-    public void setActualAmount(BigDecimal actualAmount) {
-        this.actualAmount = actualAmount;
     }
 
     public BigDecimal getDiscountAmount() {
@@ -88,13 +88,13 @@ public class Order {
     @Override
     public String toString() {
         return "Order{" +
-        "headerId=" + headerId +
-        ", code='" + code + '\'' +
-        ", amount=" + amount +
-        ", actualAmount=" + actualAmount +
-        ", discountAmount=" + discountAmount +
-        ", lines=" + lines +
-        ", coupons=" + coupons +
-        '}';
+                "id=" + id +
+                ", code='" + code + '\'' +
+                ", channel='" + channel + '\'' +
+                ", amount=" + amount +
+                ", discountAmount=" + discountAmount +
+                ", lines=" + lines +
+                ", coupons=" + coupons +
+                '}';
     }
 }
