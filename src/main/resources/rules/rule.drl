@@ -3,16 +3,47 @@ import devin.drools.data.Order;
 import devin.drools.data.OrderLine;
 import devin.drools.data.Coupon;
 import devin.drools.util.Constants;
-import devin.drools.service.CouponService;
+import devin.drools.util.CommonUtils;
 import java.math.BigDecimal;
 
-rule "order coupon"
+global devin.drools.service.CouponService couponService;
+
+/**
+ * @param order     订单
+ * @param coupon    优惠券
+ */
+function void handleOrderCoupon(Order order, Coupon coupon) {
+    coupon.setUsable(true);
+
+    // 优惠券的优惠金额
+    BigDecimal discount = coupon.getDiscountAmout();
+    discount = discount != null ? discount : BigDecimal.ZERO;
+    // 订单总的优惠金额
+    BigDecimal discountAmt = order.getDiscountAmount();
+    discountAmt = discountAmt != null ? discountAmt : BigDecimal.ZERO;
+    order.setDiscountAmount(discountAmt.add(discount));
+}
+
+rule "order channel"
     no-loop true
     lock-on-active true
     when
         $order: Order(channel == Constants.ORDER_CHANNEL_SHOP);
+        $coupon: Coupon(code == "COUPON001") from $order.currentCoupon;
     then
-        CouponService.addCoupon($order, 1L, "OR0001", "渠道-实体店-OR0001",
-            Constants.COUPON_APPLY_ON_ORDER,
-            new BigDecimal(10).setScale(Constants.PRICE_PRECISION, BigDecimal.ROUND_HALF_UP));
+        handleOrderCoupon($order, $coupon);
+        // 重新计算订单的金额
+        couponService.calculateAfterAddingCoupon($order);
+end
+
+rule "order amount"
+    no-loop true
+    lock-on-active true
+    when
+        $order: Order(amount < 102);
+        $coupon: Coupon(code == "COUPON002") from $order.currentCoupon;
+    then
+        handleOrderCoupon($order, $coupon);
+        // 重新计算订单金额
+        couponService.calculateAfterAddingCoupon($order);
 end

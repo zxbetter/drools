@@ -59,4 +59,30 @@ public class Constants {
      */
     public static final BigDecimal PRODUCT_DEFAULT_PRICE = new BigDecimal(111.2)
             .setScale(PRICE_PRECISION, BigDecimal.ROUND_HALF_UP);
+
+    /**
+     * 优惠券默认 id
+     */
+    public static final Long COUPON_DEFAULT_ID = 1000L;
+
+    /**
+     * 优惠券默认 code
+     */
+    public static final String COUPON_DEFAULT_CODE = "COUPON0001";
+
+    /**
+     * 优惠券默认名称
+     */
+    public static final String COUPON_DEFAULT_NAME = "优惠券";
+
+    /**
+     * 优惠券默认类型
+     */
+    public static final String COUPON_DEFAULT_TYPE = COUPON_APPLY_ON_ORDER;
+
+    /**
+     * 优惠券默认优惠金额
+     */
+    public static final BigDecimal COUPON_DEFAULT_AMT = new BigDecimal(10)
+            .setScale(PRICE_PRECISION, BigDecimal.ROUND_HALF_UP);
 }

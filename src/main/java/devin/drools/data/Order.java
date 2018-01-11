@@ -29,6 +29,17 @@ public class Order {
     /** 订单用的优惠券 */
     private List<Coupon> coupons;
 
+    /** 当前验证的优惠券 */
+    private Coupon currentCoupon;
+
+    public Coupon getCurrentCoupon() {
+        return currentCoupon;
+    }
+
+    public void setCurrentCoupon(Coupon currentCoupon) {
+        this.currentCoupon = currentCoupon;
+    }
+
     public Long getId() {
         return id;
     }

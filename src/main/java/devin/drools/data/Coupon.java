@@ -25,6 +25,19 @@ public class Coupon {
     /** 优惠金额 */
     private BigDecimal discountAmout;
 
+    /**
+     * 标识优惠券是否通过 drools 校验
+     */
+    private boolean usable;
+
+    public boolean isUsable() {
+        return usable;
+    }
+
+    public void setUsable(boolean usable) {
+        this.usable = usable;
+    }
+
     public Long getId() {
         return id;
     }
