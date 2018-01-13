@@ -104,8 +104,8 @@ public class Order {
                 ", channel='" + channel + '\'' +
                 ", amount=" + amount +
                 ", discountAmount=" + discountAmount +
-                ", lines=" + lines +
-                ", coupons=" + coupons +
+                ",\n lines=" + lines +
+                ",\n coupons=" + coupons +
                 '}';
     }
 }

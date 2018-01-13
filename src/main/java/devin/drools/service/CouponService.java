@@ -17,7 +17,7 @@ public class CouponService {
      * 添加优惠券后重新计算订单的金额
      * @param order    订单对象
      */
-    public void calculateAfterAddingCoupon(Order order) {
+    public void calculateAfterCoupon(Order order) {
         orderService.calculatePrice(order);
     }
 }

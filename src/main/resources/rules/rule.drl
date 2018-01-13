@@ -1,4 +1,5 @@
 package devin.drools.rules
+
 import devin.drools.data.Order;
 import devin.drools.data.OrderLine;
 import devin.drools.data.Coupon;
@@ -58,8 +59,7 @@ rule "rule_COUPON0001"
         $coupon: Coupon(code == "COUPON001") from $order.currentCoupon;
     then
         handleOrderCoupon($order, $coupon);
-        // 重新计算订单的金额
-        couponService.calculateAfterAddingCoupon($order);
+        couponService.calculateAfterCoupon($order);
 end
 
 rule "rule_COUPON0002"
@@ -75,5 +75,5 @@ rule "rule_COUPON0002"
         $coupon: Coupon(code == "COUPON002") from $order.currentCoupon;
     then
         handleLineCoupon($order, $coupon, "PRODUCT0001");
-        couponService.calculateAfterAddingCoupon($order);
+        couponService.calculateAfterCoupon($order);
 end

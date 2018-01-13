@@ -86,6 +86,6 @@ public class Coupon {
                 ", name='" + name + '\'' +
                 ", type='" + type + '\'' +
                 ", discountAmout=" + discountAmout +
-                '}';
+                '}' + "\n    ";
     }
 }

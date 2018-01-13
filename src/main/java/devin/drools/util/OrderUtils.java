@@ -77,11 +77,10 @@ public class OrderUtils {
      * @param price       商品价格
      * @param quantity    商品数量
      */
-    public OrderUtils addOrderLine(String number, String name, BigDecimal price, Long quantity) {
+    public OrderUtils addOrderLine(String number, String name, double price, Long quantity) {
         // 处理 null 参数
         number = number != null ? number : Constants.PRODUCT_DEFAULT_NUMBER;
         name = name != null ? name : Constants.PRODUCT_DEFAULT_NAME;
-        price = price != null ? price : Constants.PRODUCT_DEFAULT_PRICE;
         quantity = quantity != null ? quantity : Constants.PRODUCT_DEFAULT_QUANTITY;
 
         if (order == null) {
@@ -107,7 +106,7 @@ public class OrderUtils {
      * 给订单添加默认订单行
      */
     public OrderUtils addOrderLine() {
-        return addOrderLine(null, null, null, null);
+        return addOrderLine(null, null, 0, null);
     }
 
     /**
@@ -117,12 +116,12 @@ public class OrderUtils {
      * @param price    商品价格
      * @return         商品对象
      */
-    private Product createProduct(String number, String name, BigDecimal price) {
+    private Product createProduct(String number, String name, double price) {
         Product product = new Product();
         product.setId(getCounter());
         product.setNumber(number);
         product.setName(name);
-        product.setPrice(price);
+        product.setPrice(CommonUtils.afterPrecision(price));
         return product;
     }
 

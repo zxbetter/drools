@@ -70,6 +70,6 @@ public class OrderLine {
                 ", quantity=" + quantity +
                 ", amount=" + amount +
                 ", discountAmout=" + discountAmout +
-                '}';
+                '}' + "\n    ";
     }
 }

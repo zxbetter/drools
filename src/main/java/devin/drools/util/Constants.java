@@ -90,4 +90,87 @@ public class Constants {
      */
     public static final BigDecimal COUPON_DEFAULT_AMT = new BigDecimal(10)
             .setScale(PRICE_PRECISION, BigDecimal.ROUND_HALF_UP);
+
+    /**
+     * 默认的 drools 脚本
+     */
+    public static final String DEFAULT_DROOLS_SCRIPT = "package devin.drools.rules\n" +
+            "\n" +
+            "import devin.drools.data.Order;\n" +
+            "import devin.drools.data.OrderLine;\n" +
+            "import devin.drools.data.Coupon;\n" +
+            "import devin.drools.util.Constants;\n" +
+            "import devin.drools.util.CommonUtils;\n" +
+            "import java.math.BigDecimal;\n" +
+            "\n" +
+            "global devin.drools.service.CouponService couponService;\n" +
+            "\n" +
+            "/**\n" +
+            " * 处理订单层优惠券\n" +
+            " * @param order     订单\n" +
+            " * @param coupon    优惠券\n" +
+            " */\n" +
+            "function void handleOrderCoupon(Order order, Coupon coupon) {\n" +
+            "    coupon.setUsable(true);\n" +
+            "\n" +
+            "    // 优惠券的优惠金额\n" +
+            "    BigDecimal discount = coupon.getDiscountAmout();\n" +
+            "    discount = discount != null ? discount : BigDecimal.ZERO;\n" +
+            "    // 订单总的优惠金额\n" +
+            "    BigDecimal discountAmt = order.getDiscountAmount();\n" +
+            "    discountAmt = discountAmt != null ? discountAmt : BigDecimal.ZERO;\n" +
+            "    order.setDiscountAmount(discountAmt.add(discount));\n" +
+            "}\n" +
+            "\n" +
+            "/**\n" +
+            " * 处理商品层优惠券\n" +
+            " * @param order     订单\n" +
+            " * @param coupon    优惠券\n" +
+            " * @param number    商品的编号\n" +
+            " */\n" +
+            "function void handleLineCoupon(Order order, Coupon coupon, String number) {\n" +
+            "    coupon.setUsable(true);\n" +
+            "\n" +
+            "    // 优惠券的优惠金额\n" +
+            "    BigDecimal discount = coupon.getDiscountAmout();\n" +
+            "    discount = discount != null ? discount : BigDecimal.ZERO;\n" +
+            "\n" +
+            "    for (OrderLine line : order.getLines()) {\n" +
+            "        if (line.getProduct() == null || !number.equals(line.getProduct().getNumber())) {\n" +
+            "            continue;\n" +
+            "        }\n" +
+            "        // 商品行优惠总额\n" +
+            "        BigDecimal discountLine = line.getDiscountAmout();\n" +
+            "        discountLine = discountLine != null ? discountLine : BigDecimal.ZERO;\n" +
+            "        line.setDiscountAmout(discountLine.add(discount));\n" +
+            "    }\n" +
+            "}\n" +
+            "\n" +
+            "rule \"rule_COUPON0001\"\n" +
+            "    no-loop true\n" +
+            "    lock-on-active true\n" +
+            "    when\n" +
+            "        $order: Order(amount > 100 && channel == Constants.ORDER_CHANNEL_SHOP);\n" +
+            "        forall(OrderLine(product.number != \"PRODUCT0002\") from $order.lines);\n" +
+            "        $coupon: Coupon(code == \"COUPON001\") from $order.currentCoupon;\n" +
+            "    then\n" +
+            "        handleOrderCoupon($order, $coupon);\n" +
+            "        couponService.calculateAfterCoupon($order);\n" +
+            "end\n" +
+            "\n" +
+            "rule \"rule_COUPON0002\"\n" +
+            "    no-loop true\n" +
+            "    lock-on-active true\n" +
+            "    when\n" +
+            "        $order: Order();\n" +
+            "        Number(intValue > 0) from accumulate(\n" +
+            "            $line: OrderLine(product.number == \"PRODUCT0001\") from $order.lines,\n" +
+            "            init(int total = 0;),\n" +
+            "            action(total += $line.getQuantity().intValue();),\n" +
+            "            result(total));\n" +
+            "        $coupon: Coupon(code == \"COUPON002\") from $order.currentCoupon;\n" +
+            "    then\n" +
+            "        handleLineCoupon($order, $coupon, \"PRODUCT0001\");\n" +
+            "        couponService.calculateAfterCoupon($order);\n" +
+            "end";
 }
