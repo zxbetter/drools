@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 global devin.drools.service.CouponService couponService;
 
 /**
+ * 处理订单层优惠券
  * @param order     订单
  * @param coupon    优惠券
  */
@@ -24,11 +25,36 @@ function void handleOrderCoupon(Order order, Coupon coupon) {
     order.setDiscountAmount(discountAmt.add(discount));
 }
 
-rule "order channel"
+/**
+ * 处理商品层优惠券
+ * @param order     订单
+ * @param coupon    优惠券
+ * @param number    商品的编号
+ */
+function void handleLineCoupon(Order order, Coupon coupon, String number) {
+    coupon.setUsable(true);
+
+    // 优惠券的优惠金额
+    BigDecimal discount = coupon.getDiscountAmout();
+    discount = discount != null ? discount : BigDecimal.ZERO;
+
+    for (OrderLine line : order.getLines()) {
+        if (line.getProduct() == null || !number.equals(line.getProduct().getNumber())) {
+            continue;
+        }
+        // 商品行优惠总额
+        BigDecimal discountLine = line.getDiscountAmout();
+        discountLine = discountLine != null ? discountLine : BigDecimal.ZERO;
+        line.setDiscountAmout(discountLine.add(discount));
+    }
+}
+
+rule "rule_COUPON0001"
     no-loop true
     lock-on-active true
     when
-        $order: Order(channel == Constants.ORDER_CHANNEL_SHOP);
+        $order: Order(amount > 100 && channel == Constants.ORDER_CHANNEL_SHOP);
+        forall(OrderLine(product.number != "PRODUCT0002") from $order.lines);
         $coupon: Coupon(code == "COUPON001") from $order.currentCoupon;
     then
         handleOrderCoupon($order, $coupon);
@@ -36,14 +62,18 @@ rule "order channel"
         couponService.calculateAfterAddingCoupon($order);
 end
 
-rule "order amount"
+rule "rule_COUPON0002"
     no-loop true
     lock-on-active true
     when
-        $order: Order(amount < 102);
+        $order: Order();
+        Number(intValue > 0) from accumulate(
+            $line: OrderLine(product.number == "PRODUCT0001") from $order.lines,
+            init(int total = 0;),
+            action(total += $line.getQuantity().intValue();),
+            result(total));
         $coupon: Coupon(code == "COUPON002") from $order.currentCoupon;
     then
-        handleOrderCoupon($order, $coupon);
-        // 重新计算订单金额
+        handleLineCoupon($order, $coupon, "PRODUCT0001");
         couponService.calculateAfterAddingCoupon($order);
 end

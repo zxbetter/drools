@@ -40,6 +40,11 @@ public class Constants {
     public static final String ORDER_CHANNEL_PHONE = "PHONE";
 
     /**
+     * 默认商品的编号
+     */
+    public static final String PRODUCT_DEFAULT_NUMBER = "PRODUCT0001";
+
+    /**
      * 默认商品名
      */
     public static final String PRODUCT_DEFAULT_NAME = "《JavaScript 权威指南》";

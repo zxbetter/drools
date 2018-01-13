@@ -14,7 +14,7 @@ public class KieUtils {
     private KieContainer container;
     private KieSession session;
 
-    public static KieUtils builder() {
+    public static KieUtils build() {
         return new KieUtils();
     }
 

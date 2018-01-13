@@ -72,16 +72,16 @@ public class OrderUtils {
 
     /**
      * 给订单添加订单行
+     * @param number      商品的编号
      * @param name        商品名称
      * @param price       商品价格
      * @param quantity    商品数量
      */
-    public OrderUtils addOrderLine(String name, BigDecimal price, Long quantity) {
-        // 默认商品名称
+    public OrderUtils addOrderLine(String number, String name, BigDecimal price, Long quantity) {
+        // 处理 null 参数
+        number = number != null ? number : Constants.PRODUCT_DEFAULT_NUMBER;
         name = name != null ? name : Constants.PRODUCT_DEFAULT_NAME;
-        // 默认价格
         price = price != null ? price : Constants.PRODUCT_DEFAULT_PRICE;
-        // 默认商品数量是 1
         quantity = quantity != null ? quantity : Constants.PRODUCT_DEFAULT_QUANTITY;
 
         if (order == null) {
@@ -91,7 +91,7 @@ public class OrderUtils {
         OrderLine line = new OrderLine();
         line.setLineId(getCounter());
         line.setQuantity(quantity);
-        line.setProduct(createProduct(name, price));
+        line.setProduct(createProduct(number, name, price));
 
         List<OrderLine> lines = order.getLines();
         if (lines == null) {
@@ -107,20 +107,20 @@ public class OrderUtils {
      * 给订单添加默认订单行
      */
     public OrderUtils addOrderLine() {
-        return addOrderLine(null, null, null);
+        return addOrderLine(null, null, null, null);
     }
 
     /**
      * 创建商品
+     * @param number   商品的编号
      * @param name     商品名称
      * @param price    商品价格
      * @return         商品对象
      */
-    private Product createProduct(String name, BigDecimal price) {
+    private Product createProduct(String number, String name, BigDecimal price) {
         Product product = new Product();
-        Long id = getCounter();
-        product.setId(id);
-        product.setNumber("PRODUCT" + id);
+        product.setId(getCounter());
+        product.setNumber(number);
         product.setName(name);
         product.setPrice(price);
         return product;
