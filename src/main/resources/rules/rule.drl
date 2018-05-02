@@ -53,11 +53,13 @@ function void handleLineCoupon(Order order, Coupon coupon, String number) {
 rule "rule_COUPON0001"
     no-loop true
     lock-on-active true
+    activation-group "group1"
     when
-        $order: Order(amount > 100 && channel == Constants.ORDER_CHANNEL_SHOP);
+        $order: Order(amount > 10 && channel == Constants.ORDER_CHANNEL_SHOP);
         forall(OrderLine(product.number != "PRODUCT0002") from $order.lines);
         $coupon: Coupon(code == "COUPON001") from $order.currentCoupon;
     then
+        System.out.println(drools.getRule().getName());
         handleOrderCoupon($order, $coupon);
         couponService.calculateAfterCoupon($order);
 end
@@ -65,6 +67,7 @@ end
 rule "rule_COUPON0002"
     no-loop true
     lock-on-active true
+    activation-group "group1"
     when
         $order: Order();
         Number(intValue > 0) from accumulate(
@@ -74,6 +77,35 @@ rule "rule_COUPON0002"
             result(total));
         $coupon: Coupon(code == "COUPON002") from $order.currentCoupon;
     then
+        System.out.println(drools.getRule().getName());
         handleLineCoupon($order, $coupon, "PRODUCT0001");
+        couponService.calculateAfterCoupon($order);
+end
+
+rule "rule_COUPON00011"
+    no-loop true
+    lock-on-active true
+    activation-group "group2"
+    when
+        $order: Order(amount > 10 && channel == Constants.ORDER_CHANNEL_SHOP);
+        forall(OrderLine(product.number != "PRODUCT0002") from $order.lines);
+        $coupon: Coupon(code == "COUPON001") from $order.currentCoupon;
+    then
+        System.out.println(drools.getRule().getName());
+        handleOrderCoupon($order, $coupon);
+        couponService.calculateAfterCoupon($order);
+end
+
+rule "rule_COUPON00022"
+    no-loop true
+    lock-on-active true
+    activation-group "group2"
+    when
+        $order: Order(amount > 10 && channel == Constants.ORDER_CHANNEL_SHOP);
+        forall(OrderLine(product.number != "PRODUCT0002") from $order.lines);
+        $coupon: Coupon(code == "COUPON001") from $order.currentCoupon;
+    then
+        System.out.println(drools.getRule().getName());
+        handleOrderCoupon($order, $coupon);
         couponService.calculateAfterCoupon($order);
 end

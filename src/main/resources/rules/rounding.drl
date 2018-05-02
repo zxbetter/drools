@@ -1,0 +1,19 @@
+package devin.drools.rules
+
+import devin.drools.data.Order
+import java.math.BigDecimal;
+
+import static devin.drools.util.DroolsHelp.helper;
+
+global devin.drools.service.CouponService couponService;
+
+
+rule "rounding_001"
+    when
+        $order: Order(amount.intValue() >= 100.12 && amount < 150);
+    then
+        helper(drools);
+        String ruleName = drools.getRule().getName();
+        System.out.println(ruleName + " start ...");
+        System.out.println(ruleName + " end ...");
+end

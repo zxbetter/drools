@@ -6,6 +6,8 @@ import devin.drools.service.CouponService;
 import devin.drools.util.Constants;
 import devin.drools.util.KieUtils;
 import devin.drools.util.OrderUtils;
+import org.kie.api.KieServices;
+import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
 
 import java.util.ArrayList;
@@ -24,10 +26,12 @@ public class Main {
 //        KieUtils kieUtils = KieUtils.build().createStrSession(Constants.DEFAULT_DROOLS_SCRIPT);
 
         Order order = OrderUtils.build().createOrderHeader(Constants.ORDER_CHANNEL_SHOP)
-                .addOrderLine("PRODUCT0001", "《Java》", 118.3, 2L)
+//                .addOrderLine("PRODUCT0001", "《Java》", 118.3, 2L)
+                .addOrderLine("PRODUCT0001", "《Java》", 100.3, 1L)
                 .addCoupon("COUPON001","订单渠道-ORDER", Constants.COUPON_APPLY_ON_ORDER, 10)
-                .addCoupon("COUPON002", "优惠商品", Constants.COUPON_APPLY_ON_PRODUCT, 5)
-                .addCoupon("COUPON003", "优惠订单", Constants.COUPON_APPLY_ON_ORDER, 5)
+                .addCoupon("COUPON001","订单渠道-ORDER", Constants.COUPON_APPLY_ON_ORDER, 10)
+                // .addCoupon("COUPON002", "优惠商品", Constants.COUPON_APPLY_ON_PRODUCT, 5)
+                // .addCoupon("COUPON003", "优惠订单", Constants.COUPON_APPLY_ON_ORDER, 5)
                 .getOrder();
 
         int result = 0;

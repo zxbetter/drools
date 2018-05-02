@@ -5,9 +5,7 @@ import devin.drools.data.Order;
 import devin.drools.data.OrderLine;
 import devin.drools.data.Product;
 import devin.drools.service.OrderService;
-import org.apache.commons.lang3.RandomStringUtils;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
